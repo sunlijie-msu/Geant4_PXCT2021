@@ -1,0 +1,1 @@
+/mnt/simulations/pxct/lijie/PXCT_Sim/build/CMakeFiles/tele.dir

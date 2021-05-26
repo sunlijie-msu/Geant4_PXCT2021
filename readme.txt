@@ -1,9 +1,8 @@
 PXCT simulation
+Location on fishtank: /mnt/simulations/pxct/lijie/PXCT_Sim/build
 
-Location on fishtank: /mnt/analysis/e17023/lijie/PXCT_Sim/build
+1) cmake -DGeant4_DIR=/mnt/simulations/proton_detector/Geant4/geant4.10.2-install/lib/Geant4-10.2.2 /mnt/simulations/pxct/lijie/PXCT_Sim
 
-cmake -DGeant4_DIR=/mnt/simulations/proton_detector/Geant4/geant4.10.2-install/lib/Geant4-10.2.2 /mnt/analysis/e17023/lijie/PXCT_Sim
+2) make
 
-make
-
-./tele vis
+3) ./tele vis

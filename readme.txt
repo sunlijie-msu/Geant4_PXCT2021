@@ -1,4 +1,5 @@
 PXCT simulation
+
 Location on fishtank:
 cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
 
@@ -8,7 +9,9 @@ cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
 
 3) ./tele vis
 
-VMware can also use these files.
+
+Location on my laptop:
+VMware Ubuntu can also use these files.
 
 cdp
 cd /home/sun/app/PXCT-build

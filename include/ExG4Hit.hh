@@ -47,7 +47,7 @@ inline void* ExG4Hit::operator new(size_t)
 {
   if (!ExG4HitAllocator)
      ExG4HitAllocator = new G4Allocator<ExG4Hit>;
-     return (void*)ExG4HitAllocator->MallocSingle();
+  return (void*)ExG4HitAllocator->MallocSingle();
 }
 
 inline void ExG4Hit::operator delete(void*aHit)

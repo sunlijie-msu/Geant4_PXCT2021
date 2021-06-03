@@ -65,7 +65,9 @@ private:
 	G4Material* plastic;
 	G4Material *P10_780torr;
 	G4Material *air;
+	G4Material *Methane;
 	G4Material *Ar;
+	G4Material* mylar;
 };
 
 #endif

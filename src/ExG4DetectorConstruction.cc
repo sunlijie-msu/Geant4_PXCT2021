@@ -82,7 +82,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
 // 	G4VSolid* solidQSD2
 // 		= new G4Box("solidQSD2",50./2.*mm,50./2.*mm,300./2.*um);
 	logicQSD2
-		= new G4LogicalVolume(solidQSD2,carbon,"logicQSD2");
+		= new G4LogicalVolume(solidQSD2,mylar,"logicQSD2");
 	physiQSD2
 		= new G4PVPlacement(0,G4ThreeVector(0,0,0*mm),logicQSD2,"physiQSD2",logicWorld,false,0,checkOverlaps);
 
@@ -114,6 +114,7 @@ void ExG4DetectorConstruction::ConstructMaterials()
 	silicon=nistManager->FindOrBuildMaterial("G4_Si");
 	csi=nistManager->FindOrBuildMaterial("G4_CESIUM_IODIDE");
 	plastic=nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");	// Scintillator	// (PolyVinylToluene, C_9H_10)
+	mylar = nistManager->FindOrBuildMaterial("G4_MYLAR");
 
 	// vacuum
 	nistManager->FindOrBuildMaterial("G4_Galatic");
@@ -127,7 +128,7 @@ void ExG4DetectorConstruction::ConstructMaterials()
 
 	//P10 Gas 780 torr
 	Ar = nistManager->FindOrBuildMaterial("G4_Ar");
-	G4Material *Methane = nistManager->FindOrBuildMaterial("G4_METHANE");
+	Methane = nistManager->FindOrBuildMaterial("G4_METHANE");
 	G4double PressureFactor = 1.0263;  // 780 torr/760 torr=1.0263
 	density = PressureFactor*0.001564*g/cm3; // 1564*1.0263=1605
 	pressure = PressureFactor*atmosphere;

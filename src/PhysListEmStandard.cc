@@ -133,7 +133,7 @@ void PhysListEmStandard::ConstructProcess()
 
       ph->RegisterProcess(new G4hMultipleScattering(), particle);      
       G4hIonisation* hIoni = new G4hIonisation();
-      hIoni->SetStepFunction(0.1, 0.1*um);
+      hIoni->SetStepFunction(0.1, 10*um);
       ph->RegisterProcess(hIoni, particle);
       ph->RegisterProcess(new G4hBremsstrahlung(), particle);
       ph->RegisterProcess(new G4hPairProduction(), particle);            
@@ -143,7 +143,7 @@ void PhysListEmStandard::ConstructProcess()
 
       ph->RegisterProcess(new G4hMultipleScattering(), particle);           
       G4ionIonisation* ionIoni = new G4ionIonisation();
-      ionIoni->SetStepFunction(0.1, 0.1*um);
+      ionIoni->SetStepFunction(0.1, 10*um);
       ph->RegisterProcess(ionIoni, particle);
       ph->RegisterProcess(new G4NuclearStopping(), particle);      
             
@@ -152,7 +152,7 @@ void PhysListEmStandard::ConstructProcess()
       ph->RegisterProcess(new G4hMultipleScattering(), particle);          
       G4ionIonisation* ionIoni = new G4ionIonisation();
       ionIoni->SetEmModel(new G4IonParametrisedLossModel());
-      ionIoni->SetStepFunction(0.1, 0.1*um);//modify cut range for secondaries production, final range for the last step of ions. It seems that there is no difference for different parameters as long as they are <0.0001*um.
+      ionIoni->SetStepFunction(0.1, 10*um);//modify cut range for secondaries production, final range for the last step of ions. It seems that there is no difference for different parameters as long as they are <0.0001*um.
       ph->RegisterProcess(ionIoni, particle);
       ph->RegisterProcess(new G4NuclearStopping(), particle);                   
       

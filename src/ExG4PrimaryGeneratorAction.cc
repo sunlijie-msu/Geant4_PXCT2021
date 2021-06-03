@@ -117,7 +117,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	excitE=0.*CLHEP::keV;
 	ioncharge = 0.*CLHEP::eplus;
 //	excitE=CLHEP::RandFlat::shoot(100000,100000);
-	Erecoil = 30000*CLHEP::keV;
+	Erecoil = 3000*CLHEP::keV;
 	tau=0;
 //	branch_integ=CLHEP::RandFlat::shoot(0.0,branch_lit_tot);
 
@@ -173,13 +173,13 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 // 	diry=sintheta_recoil*sin(phi_recoil);//isotropy
 // 	dirz=costheta_recoil;//isotropy
 
-	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
-	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
-	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
-	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
-	dirx=sintheta_n1*cos(phi_n1);//isotropy
-	diry=sintheta_n1*sin(phi_n1);//isotropy
-	dirz=costheta_n1;//isotropy
+// 	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
+// 	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
+// 	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
+// 	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
+// 	dirx=sintheta_n1*cos(phi_n1);//isotropy
+// 	diry=sintheta_n1*sin(phi_n1);//isotropy
+// 	dirz=costheta_n1;//isotropy
 
 //	costheta_n2=CLHEP::RandFlat::shoot(-1,1);//isotropic particle
 //	Erecoil=Erecoil*costheta_n2*costheta_n2;//random deg
@@ -192,8 +192,8 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	//position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,-26.7/2.0+5.86/1000.*CLHEP::mm);
 	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);//usually for check, validation and test
 	//G4ThreeVector position=G4ThreeVector(x0,y0,z0);//real position of source
-	//momentumDirection = G4ThreeVector(0,0,+1);//(0,0,+1) towards Z+ axis, usually for check, validation and test
-	momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	momentumDirection = G4ThreeVector(0,0,+1);//(0,0,+1) towards Z+ axis, usually for check, validation and test
+	//momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
 	fParticleGun->SetParticleDefinition(particle);
 	fParticleGun->SetParticleEnergy(Erecoil);
 	fParticleGun->SetParticlePosition(position);

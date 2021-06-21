@@ -18,8 +18,23 @@ ExG4PrimaryGeneratorAction::ExG4PrimaryGeneratorAction()
 	:  G4VUserPrimaryGeneratorAction(),
 	fParticleGun(0)
 {
+// The basic units are :
+//		millimeter              (millimeter)
+// 		nanosecond              (nanosecond)
+// 		Mega electron Volt      (MeV)
+// 		positron charge         (eplus)
+// 		degree Kelvin           (kelvin)
+//      the amount of substance (mole)
+//      luminous intensity      (candela)
+// 		radian                  (radian)
+//      steradian               (steradian)
 	G4int nofParticles = 1;
 	fParticleGun = new G4ParticleGun(nofParticles);
+	xygaus = new TF2("xygaus","xygaus",-15,15,-15,15);// predefined 2D Gaussian function  // 2D Gaussian beam spot
+	xygaus->SetParameters(1,0,3,0,3); // amplitude, mean_x, sigma_x, mean_y, sigma_y  in units of mm. // 2D Gaussian beam spot
+	xygaus->SetNpx(200);  // 2D Gaussian beam spot
+	xygaus->SetNpy(200);  // 2D Gaussian beam spot
+	Rmax = 10;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm)
 	//pFile=new TFile("/mnt/hgfs/HPGe/S27_pz.root","read");
 	//pFile=new TFile("/mnt/hgfs/HPGe/P26_pz.root","read");
 	//pFile=new TFile("/mnt/hgfs/HPGe/Si25_pz.root","read");
@@ -117,7 +132,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	excitE=0.*CLHEP::keV;
 	ioncharge = 0.*CLHEP::eplus;
 //	excitE=CLHEP::RandFlat::shoot(100000,100000);
-	Erecoil = 3000*CLHEP::keV;
+	Erecoil = 10000*CLHEP::keV;
 	tau=0;
 //	branch_integ=CLHEP::RandFlat::shoot(0.0,branch_lit_tot);
 
@@ -149,7 +164,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 //	Erecoil=G4RandGauss::shoot(Erecoil,0.01/2.355*Erecoil);
 	//G4ParticleDefinition* particle = G4IonTable::GetIonTable()->GetIon(Z_r,A_r,excitE);
 	//G4ParticleDefinition* particle = G4IonTable::GetIonTable()->GetIon(12,26,0); //28Mg: GetIon(12,28,0); 
-	G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("alpha");
+	G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("proton");
 	//G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 	//G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("e+");
 	//particle->SetProperTime(0.0);
@@ -173,14 +188,6 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 // 	diry=sintheta_recoil*sin(phi_recoil);//isotropy
 // 	dirz=costheta_recoil;//isotropy
 
-// 	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
-// 	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
-// 	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
-// 	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
-// 	dirx=sintheta_n1*cos(phi_n1);//isotropy
-// 	diry=sintheta_n1*sin(phi_n1);//isotropy
-// 	dirz=costheta_n1;//isotropy
-
 //	costheta_n2=CLHEP::RandFlat::shoot(-1,1);//isotropic particle
 //	Erecoil=Erecoil*costheta_n2*costheta_n2;//random deg
 	//Erecoil=Erecoil;//0 deg
@@ -190,10 +197,28 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	//analysisManagerin->OpenFile("ExG4old");
 	//G4cout<<"lalala "<<analysisManagerin->GetH1(1)->mean()<<G4endl;
 	//position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,-26.7/2.0+5.86/1000.*CLHEP::mm);
-	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);//usually for check, validation and test
-	//G4ThreeVector position=G4ThreeVector(x0,y0,z0);//real position of source
-	momentumDirection = G4ThreeVector(0,0,+1);//(0,0,+1) towards Z+ axis, usually for check, validation and test
-	//momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	
+
+
+	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
+	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
+	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
+	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
+	dirx=sintheta_n1*cos(phi_n1);//isotropy
+	diry=sintheta_n1*sin(phi_n1);//isotropy
+	dirz=costheta_n1;//isotropy
+
+	xygaus->GetRandom2(x0,y0); // 2D Gaussian beam spot  // Return two random numbers to x0 and y0 following this function shape.
+	r_beam = sqrt(gRandom->Uniform(0,1))*Rmax;  // 2D Uniform beam spot
+	theta_beam = gRandom->Uniform(0,2.*3.14159);  // 2D Uniform beam spot
+	x0= r_beam*cos(theta_beam);  // 2D Uniform beam spot
+	y0 = r_beam*sin(theta_beam);  // 2D Uniform beam spot
+	z0=0;
+	//G4cout<<"++++++++++++  x0="<<x0/CLHEP::mm<<"  y0="<<y0/CLHEP::mm<<"  z0="<<z0/CLHEP::mm<<G4endl;
+	//position=G4ThreeVector(x0*CLHEP::mm,y0*CLHEP::mm,z0*CLHEP::mm);// 2D beam spot
+	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);// point source, usually for check, validation and test
+	momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	//momentumDirection = G4ThreeVector(0,0,+1);//(0,0,+1) unidirectional towards Z+ axis, usually for check, validation and test
 	fParticleGun->SetParticleDefinition(particle);
 	fParticleGun->SetParticleEnergy(Erecoil);
 	fParticleGun->SetParticlePosition(position);

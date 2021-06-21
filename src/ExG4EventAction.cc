@@ -76,13 +76,14 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 //   }
   ofstream outresultfile("out.txt",ios::app);//定义输出文件流对象outbeamfile，以追加方式打开磁盘文件. by event
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  G4int ih=-1,jh=-1;  //which strip is hitted 
+  G4double ih=-1,jh=-1;  //which strip is hitted 
   G4double eDep;
   G4double tof=-999;
   G4int totalEmHit = 0;
   G4double totalEmE = 0.;
   G4double px[100],py[100],pz[100],dx[100],length=0;//length is the sum of all the dx
   G4double t[100],dt[100],velocity=0;//velocity is dx/dt
+  G4int ring1_hit, ring2_hit, ring3_hit;
   memset(px,0,sizeof(px));
   memset(py,0,sizeof(py));
   memset(pz,0,sizeof(pz));
@@ -109,11 +110,11 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  //hit->Print();
 		  tof = hit->GetTof();
 		  G4ThreeVector globalPos=hit->GetPos();
-		  ih = static_cast<int>(globalPos.x()+100);
-		  jh = static_cast<int>(globalPos.y()+100);
-		  analysisManager->FillNtupleIColumn(2,ih);//nt ID=2
-		  analysisManager->FillNtupleIColumn(3,jh);//nt ID=3
-		  analysisManager->FillNtupleFColumn(4,globalPos.z());//nt ID=4
+		  ih = globalPos.x()+100;
+		  jh = globalPos.y()+100;
+		  analysisManager->FillNtupleDColumn(2,ih);//nt ID=2
+		  analysisManager->FillNtupleDColumn(3,jh);//nt ID=3
+		  analysisManager->FillNtupleDColumn(4,globalPos.z());//nt ID=4
 		  analysisManager->FillH2(0,ih,jh);//h2 ID=0
 		  eDep=hit->GetE();
 		  totalEmHit++;
@@ -147,13 +148,13 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
  	  analysisManager->FillNtupleDColumn(1,totalEmE/CLHEP::keV);//nt ID=1 filled by event
  	  analysisManager->FillNtupleDColumn(5,t[0]);//nt ID=5 filled by event
   }
-  // else  analysisManager->FillNtupleIColumn(4,0);
+  
   if(dHC2)//For DSSD2
   {
 	  G4int n_hits=dHC2->entries();//DSSD2SD hit 数
 	  //G4cout<<"-----DSSD2---"<<"dHC2 n_hits="<<n_hits<<G4endl;
 	  analysisManager->FillH1(1,n_hits);//h1 ID=1, distribution of the number of hits
-	  totalEmHit=0;	totalEmE=0;	ih=-10;	jh=-10; tof=-999; length=0; velocity=0;
+	  totalEmHit=0;	totalEmE=0;	ih=-100;	jh=-100; tof=-999; length=0; velocity=0; ring1_hit=0; ring2_hit=0; ring3_hit=0;
 	  memset(px,0,sizeof(px));
 	  memset(py,0,sizeof(py));
 	  memset(pz,0,sizeof(pz));
@@ -167,11 +168,11 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  // hit->Print();
 		  tof = hit->GetTof();
 		  G4ThreeVector globalPos=hit->GetPos();
-		  ih = static_cast<int>(globalPos.x()+100);
-		  jh = static_cast<int>(globalPos.y()+100);
-		  analysisManager->FillNtupleIColumn(8,ih);//nt ID=8
-		  analysisManager->FillNtupleIColumn(9,jh);;//nt ID=9
-		  analysisManager->FillNtupleFColumn(10,globalPos.z());//nt ID=10
+		  ih = globalPos.x()+100;
+		  jh = globalPos.y()+100;
+		  analysisManager->FillNtupleDColumn(8,ih);//nt ID=8
+		  analysisManager->FillNtupleDColumn(9,jh);;//nt ID=9
+		  analysisManager->FillNtupleDColumn(10,globalPos.z());//nt ID=10
 		  analysisManager->FillH2(1,ih,jh);//h2 ID=1
 		  eDep=hit->GetE();
 		  totalEmHit++;
@@ -184,6 +185,26 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  {
 			  dt[i]=t[i];
 			  dx[i]=sqrt(px[i]*px[i] + py[i]*py[i] + pz[i]*pz[i]);
+			  //G4cout<<"r=	"<<sqrt(px[i]*px[i] + py[i]*py[i])/CLHEP::mm<<G4endl;
+			  if(sqrt(px[i]*px[i] + py[i]*py[i])<7*CLHEP::mm)  //segmented rings
+			  {
+				  ring1_hit=1;
+				  analysisManager->FillNtupleDColumn(25,ih);//nt ID=25
+				  analysisManager->FillNtupleDColumn(26,jh);;//nt ID=26
+			  }
+			  if(sqrt(px[i]*px[i] + py[i]*py[i])>=7*CLHEP::mm&&sqrt(px[i]*px[i] + py[i]*py[i])<10*CLHEP::mm)  //segmented rings
+			  {
+				  ring2_hit=1;
+				  analysisManager->FillNtupleDColumn(28,ih);//nt ID=28
+				  analysisManager->FillNtupleDColumn(29,jh);;//nt ID=29
+			  }
+			  if(sqrt(px[i]*px[i] + py[i]*py[i])>=10*CLHEP::mm&&sqrt(px[i]*px[i] + py[i]*py[i])<13*CLHEP::mm)  //segmented rings
+			  {
+				  ring3_hit=1;
+				  analysisManager->FillNtupleDColumn(31,ih);//nt ID=31
+				  analysisManager->FillNtupleDColumn(32,jh);;//nt ID=32
+				  //G4cout<<"r=	"<<sqrt(px[i]*px[i] + py[i]*py[i])/CLHEP::mm<<G4endl;
+			  }
 		  }
 		  if(i>0&&i<300)
 		  {
@@ -203,6 +224,9 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 	  //}
 	  analysisManager->FillH1(4,totalEmE/CLHEP::keV);//h1 ID=4
 	  analysisManager->FillNtupleDColumn(7,totalEmE/CLHEP::keV);//nt ID=7
+	  if(ring1_hit==1) analysisManager->FillNtupleDColumn(24,totalEmE/CLHEP::keV);//nt ID=24  //segmented rings
+	  if(ring2_hit==1) analysisManager->FillNtupleDColumn(27,totalEmE/CLHEP::keV);//nt ID=27  //segmented rings
+	  if(ring3_hit==1) analysisManager->FillNtupleDColumn(30,totalEmE/CLHEP::keV);//nt ID=30  //segmented rings
 	  analysisManager->FillNtupleDColumn(11,tof);;//nt ID=11
   }
   if(dHC3)//For DSSD3
@@ -210,7 +234,7 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 	  G4int n_hits=dHC3->entries();//DSSD3SD hit 数
 	  //G4cout<<"-----DSSD3---"<<"dHC3 n_hits="<<n_hits<<G4endl;
 	  analysisManager->FillH1(2,n_hits);//h1 ID=2, distribution of the number of hits
-	  totalEmHit=0;	totalEmE=0;	ih=-10;	jh=-10; tof=-999; length=0; velocity=0;
+	  totalEmHit=0;	totalEmE=0;	ih=-100;	jh=-100; tof=-999; length=0; velocity=0;
 	  memset(px,0,sizeof(px));
 	  memset(py,0,sizeof(py));
 	  memset(pz,0,sizeof(pz));
@@ -223,11 +247,11 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  // hit->Print();
 		  tof = hit->GetTof();
 		  G4ThreeVector globalPos=hit->GetPos();
-		  ih = static_cast<int>(globalPos.x()+100);
-		  jh = static_cast<int>(globalPos.y()+100);
-		  analysisManager->FillNtupleIColumn(14,ih);//nt ID=14
-		  analysisManager->FillNtupleIColumn(15,jh);//nt ID=15
-		  analysisManager->FillNtupleFColumn(16,globalPos.z());//nt ID=16
+		  ih = globalPos.x()+100;
+		  jh = globalPos.y()+100;
+		  analysisManager->FillNtupleDColumn(14,ih);//nt ID=14
+		  analysisManager->FillNtupleDColumn(15,jh);//nt ID=15
+		  analysisManager->FillNtupleDColumn(16,globalPos.z());//nt ID=16
 		  analysisManager->FillH2(2,ih,jh);//h2 ID=2
 		  eDep=hit->GetE();
 		  totalEmHit++;
@@ -280,11 +304,11 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  // hit->Print();
 		  tof = hit->GetTof();
 		  G4ThreeVector globalPos=hit->GetPos();
-		  ih = static_cast<int>(globalPos.x()+100);
-		  jh = static_cast<int>(globalPos.y()+100);
-		  analysisManager->FillNtupleIColumn(20,ih);//nt ID=20
-		  analysisManager->FillNtupleIColumn(21,jh);//nt ID=21
-		  analysisManager->FillNtupleFColumn(22,globalPos.z());//nt ID=22
+		  ih = globalPos.x()+100;
+		  jh = globalPos.y()+100;
+		  analysisManager->FillNtupleDColumn(20,ih);//nt ID=20
+		  analysisManager->FillNtupleDColumn(21,jh);//nt ID=21
+		  analysisManager->FillNtupleDColumn(22,globalPos.z());//nt ID=22
 		  //analysisManager->FillH2(2,ih,jh);//h2 ID=2
 		  eDep=hit->GetE();
 		  totalEmHit++;

@@ -27,9 +27,9 @@ ExG4RunAction::ExG4RunAction()
   analysisManager->CreateH1("h1DSSD1e","h1DSSD1e",60000,0.,60000); // h1 ID=3//6000 is range, in what unit is defined in FillH1
   analysisManager->CreateH1("h1DSSD2e","h1DSSD2e",60000,0.,60000); // h1 ID=4//6000 is range, in what unit is defined in FillH1
   analysisManager->CreateH1("h1DSSD3e","h1DSSD3e",60000,0.,60000); // h1 ID=5//6000 is range, in what unit is defined in FillH1
-  analysisManager->CreateH2("DSSD1XY","DSSD1XY",20,110.,130.,20,110.,130.); // h2 ID = 0
-  analysisManager->CreateH2("DSSD2XY","DSSD2XY",20,110.,130.,20,110.,130.); // h2 ID = 1
-  analysisManager->CreateH2("DSSD3XY","DSSD3XY",20,110.,130.,20,110.,130.); // h2 ID = 2
+  analysisManager->CreateH2("DSSD1XY","DSSD1XY",80,80.,120.,80,80.,120.); // h2 ID = 0
+  analysisManager->CreateH2("DSSD2XY","DSSD2XY",80,80.,120.,80,80.,120.); // h2 ID = 1
+  analysisManager->CreateH2("DSSD3XY","DSSD3XY",80,80.,120.,80,80.,120.); // h2 ID = 2
   //CreatH1(name,title,nbins,vmin,vmax)
   //analysisManager/h1set hID nxbin xmin xmax [xunit] [xfcn] [xfcn] [binscheme]
   //analysisManager/h2set hID nxbin xmin xmax xunit xfcn nybin ymin ymax yunit yfcn
@@ -37,31 +37,42 @@ ExG4RunAction::ExG4RunAction()
   analysisManager->CreateNtuple("tree","tree");
   analysisManager->CreateNtupleIColumn("DSSD1n"); //nt ID = 0
   analysisManager->CreateNtupleDColumn("DSSD1e"); //nt ID = 1
-  analysisManager->CreateNtupleIColumn("DSSD1x");  //nt ID = 2
-  analysisManager->CreateNtupleIColumn("DSSD1y");  //nt ID = 3
-  analysisManager->CreateNtupleFColumn("DSSD1z");  //nt ID = 4
+  analysisManager->CreateNtupleDColumn("DSSD1x");  //nt ID = 2
+  analysisManager->CreateNtupleDColumn("DSSD1y");  //nt ID = 3
+  analysisManager->CreateNtupleDColumn("DSSD1z");  //nt ID = 4
   analysisManager->CreateNtupleDColumn("DSSD1t");  //nt ID = 5
 
   analysisManager->CreateNtupleIColumn("DSSD2n"); //nt ID = 6
   analysisManager->CreateNtupleDColumn("DSSD2e"); //nt ID = 7
-  analysisManager->CreateNtupleIColumn("DSSD2x");  //nt ID = 8
-  analysisManager->CreateNtupleIColumn("DSSD2y");  //nt ID = 9
-  analysisManager->CreateNtupleFColumn("DSSD2z");  //nt ID = 10
+  analysisManager->CreateNtupleDColumn("DSSD2x");  //nt ID = 8
+  analysisManager->CreateNtupleDColumn("DSSD2y");  //nt ID = 9
+  analysisManager->CreateNtupleDColumn("DSSD2z");  //nt ID = 10
   analysisManager->CreateNtupleDColumn("DSSD2t");  //nt ID = 11
 
   analysisManager->CreateNtupleIColumn("DSSD3n"); //nt ID = 12
   analysisManager->CreateNtupleDColumn("DSSD3e"); //nt ID = 13
-  analysisManager->CreateNtupleIColumn("DSSD3x");  //nt ID = 14
-  analysisManager->CreateNtupleIColumn("DSSD3y");  //nt ID = 15
-  analysisManager->CreateNtupleFColumn("DSSD3z");  //nt ID = 16
+  analysisManager->CreateNtupleDColumn("DSSD3x");  //nt ID = 14
+  analysisManager->CreateNtupleDColumn("DSSD3y");  //nt ID = 15
+  analysisManager->CreateNtupleDColumn("DSSD3z");  //nt ID = 16
   analysisManager->CreateNtupleDColumn("DSSD3t");  //nt ID = 17
   
   analysisManager->CreateNtupleIColumn("QSD1n"); //nt ID = 18
   analysisManager->CreateNtupleDColumn("QSD1e"); //nt ID = 19
-  analysisManager->CreateNtupleIColumn("QSD1x");  //nt ID = 20
-  analysisManager->CreateNtupleIColumn("QSD1y");  //nt ID = 21
-  analysisManager->CreateNtupleFColumn("QSD1z");  //nt ID = 22
+  analysisManager->CreateNtupleDColumn("QSD1x");  //nt ID = 20
+  analysisManager->CreateNtupleDColumn("QSD1y");  //nt ID = 21
+  analysisManager->CreateNtupleDColumn("QSD1z");  //nt ID = 22
   analysisManager->CreateNtupleDColumn("QSD1t");  //nt ID = 23
+
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring1e"); //nt ID = 24
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring1x");  //nt ID = 25
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring1y");  //nt ID = 26
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring2e"); //nt ID = 27
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring2x");  //nt ID = 28
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring2y");  //nt ID = 29
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring3e"); //nt ID = 30
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring3x");  //nt ID = 31
+  analysisManager->CreateNtupleDColumn("DSSD2_Ring3y");  //nt ID = 32
+
 }
 
 ExG4RunAction::~ExG4RunAction()

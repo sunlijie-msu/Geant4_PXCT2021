@@ -15,6 +15,8 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh" 
 #include "G4PVPlacement.hh"
+#include "G4VisAttributes.hh"
+#include "G4Colour.hh"
 #include "G4SDManager.hh"
 #include "G4VSensitiveDetector.hh"
 #include "globals.hh"
@@ -42,32 +44,69 @@ public:
 
 private:
 	G4VPhysicalVolume* physiDSSD1;
+	G4VPhysicalVolume* physiDSSD1_Chip;
+	G4VPhysicalVolume* physiDSSD1_Frame;
+	G4VPhysicalVolume* physiDSSD1_Window_Front;
+	G4VPhysicalVolume* physiDSSD1_Window_Back;
 	G4VPhysicalVolume* physiDSSD2;
+	G4VPhysicalVolume* physiDSSD2_Chip;
+	G4VPhysicalVolume* physiDSSD2_Frame;
+	G4VPhysicalVolume* physiDSSD2_Window_Front;
+	G4VPhysicalVolume* physiDSSD2_Window_Back;
 	G4VPhysicalVolume* physiDSSD3;
 	G4VPhysicalVolume* physiQSD1;
 	G4VPhysicalVolume* physiQSD2;
-	//G4VPhysicalVolume* fCSIArray;
+
 
 	G4LogicalVolume* logicDSSD1;
+	G4LogicalVolume* logicDSSD1_Chip;
+	G4LogicalVolume* logicDSSD1_Frame;
+	G4LogicalVolume* logicDSSD1_Window_Front;
+	G4LogicalVolume* logicDSSD1_Window_Back;
 	G4LogicalVolume* logicDSSD2;
+	G4LogicalVolume* logicDSSD2_Chip;
+	G4LogicalVolume* logicDSSD2_Frame;
+	G4LogicalVolume* logicDSSD2_Window_Front;
+	G4LogicalVolume* logicDSSD2_Window_Back;
 	G4LogicalVolume* logicDSSD3;
 	G4LogicalVolume* logicQSD1;
 	G4LogicalVolume* logicQSD2;
 
 	//Materials
+	G4Element* O;
+	G4Element* Si;
+	G4Element* H;
+	G4Element* C;
+	G4Element* Fe;
+	G4Element* Cr;
+	G4Element* Ni;
+
 	G4Material* silicon;
 	G4Material* germanium;
 	G4Material* gold;
 	G4Material* iron;
 	G4Material* carbon;
+	G4Material* hydrogen;
+	G4Material* aluminum;
 	G4Material* csi;
 	G4Material* vacuum;
 	G4Material* plastic;
 	G4Material *P10_780torr;
 	G4Material *air;
-	G4Material *Methane;
-	G4Material *Ar;
+	G4Material *methane;
+	G4Material *argon;
 	G4Material* mylar;
+	G4Material* stainless_steel;
+	G4Material* SiO2;
+	G4Material* epoxy;
+	G4Material* FR4;
+	G4Material* PEEK;
+	G4Material* G10;
+
+	G4double density, temperature, pressure, PressureFactor;
+	G4int nel;
+
+	G4VisAttributes* DetectorVisAtt;
 };
 
 #endif

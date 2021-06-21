@@ -10,8 +10,14 @@
 #include "G4ThreeVector.hh"
 #include "globals.hh"
 #include "CLHEP/Units/SystemOfUnits.h"
-//#include "TH1.h"
-//#include "TFile.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TFile.h"
+#include "TF1.h"
+#include "TF2.h"
+#include "TRandom.h"
+#include "TRandom3.h"
+
 class G4ParticleGun;
 class G4Event;
 
@@ -37,7 +43,9 @@ private:
 // 	TH1F *px_impl;
 // 	TH1F *py_impl;
 //     TH1D *pz_impl;// TH1F *pz = new TH1F("pz","pz",4000,0,4000); The whole sentence cannot be written in .hh
-	G4float x0,y0,z0;
+	TF2 *xygaus; // 2D Gaussian beam spot
+	double theta_beam, r_beam, Rmax; // 2D Uniform beam spot
+	double x0,y0,z0; // 2D beam spot	
 	double Eg_lit[100];
 	double branch_lit[100];
 	double En_lit[100],En1,En2;

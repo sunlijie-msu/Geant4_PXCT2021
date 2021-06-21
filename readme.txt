@@ -17,7 +17,7 @@ cdp
 cd /home/sun/app/PXCT-build
 
 1) cmp
-cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/PXCT_fishtank
+cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/PXCT
 
 2) make
 

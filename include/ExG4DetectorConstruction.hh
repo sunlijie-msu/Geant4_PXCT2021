@@ -56,7 +56,7 @@ private:
 	G4VPhysicalVolume* physiDSSD3;
 	G4VPhysicalVolume* physiQSD1;
 	G4VPhysicalVolume* physiQSD2;
-
+	G4VPhysicalVolume* physiChamber;
 
 	G4LogicalVolume* logicDSSD1;
 	G4LogicalVolume* logicDSSD1_Chip;
@@ -71,6 +71,7 @@ private:
 	G4LogicalVolume* logicDSSD3;
 	G4LogicalVolume* logicQSD1;
 	G4LogicalVolume* logicQSD2;
+	G4LogicalVolume* logicChamber;
 
 	//Materials
 	G4Element* O;

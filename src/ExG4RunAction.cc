@@ -34,6 +34,7 @@ ExG4RunAction::ExG4RunAction()
   //analysisManager/h1set hID nxbin xmin xmax [xunit] [xfcn] [xfcn] [binscheme]
   //analysisManager/h2set hID nxbin xmin xmax xunit xfcn nybin ymin ymax yunit yfcn
   //histogram IDs are attributed automatically. 1D and 2D histograms IDs are defined independently
+
   analysisManager->CreateNtuple("tree","tree");
   analysisManager->CreateNtupleIColumn("DSSD1n"); //nt ID = 0
   analysisManager->CreateNtupleDColumn("DSSD1e"); //nt ID = 1

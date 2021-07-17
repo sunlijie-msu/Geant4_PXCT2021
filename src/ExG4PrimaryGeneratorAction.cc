@@ -14,6 +14,16 @@
 #include "G4PrimaryParticle.hh"
 #include "Randomize.hh"
 using namespace std;
+
+
+G4double rand_energy()
+{
+	float x = CLHEP::RandFlat::shoot(0.0,1.0);
+	//    cout << x << "\n";
+	if(x<0.5)return 8.0*CLHEP::keV;
+	else return 8.6*CLHEP::keV;
+}
+
 ExG4PrimaryGeneratorAction::ExG4PrimaryGeneratorAction()
 	:  G4VUserPrimaryGeneratorAction(),
 	fParticleGun(0)
@@ -132,7 +142,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	excitE=0.*CLHEP::keV;
 	ioncharge = 0.*CLHEP::eplus;
 //	excitE=CLHEP::RandFlat::shoot(100000,100000);
-	Erecoil = 10000*CLHEP::keV;
+	Erecoil =10*CLHEP::keV;
 	tau=0;
 //	branch_integ=CLHEP::RandFlat::shoot(0.0,branch_lit_tot);
 
@@ -159,13 +169,13 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 //		excitE=G4RandGauss::shoot(excitE,0.001414/2.355*excitE);//sigma resolution, 0.01/2.355 means 1%//slow down the speed by a factor of 10
 //		//G4cout<<excitE/CLHEP::keV<<"	"<<resolution<<G4endl;
 //	}
-//	else
+//	excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
 //	excitE=G4RandGauss::shoot(excitE,resolution/2.355*excitE);//sigma resolution, 0.01/2.355 means 1%//slow down the speed by a factor of 10
 //	Erecoil=G4RandGauss::shoot(Erecoil,0.01/2.355*Erecoil);
 	//G4ParticleDefinition* particle = G4IonTable::GetIonTable()->GetIon(Z_r,A_r,excitE);
 	//G4ParticleDefinition* particle = G4IonTable::GetIonTable()->GetIon(12,26,0); //28Mg: GetIon(12,28,0); 
-	G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("proton");
-	//G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+	//G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("proton");
+	G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 	//G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle("e+");
 	//particle->SetProperTime(0.0);
 //	particle->SetPDGStable(false);
@@ -199,7 +209,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	//position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,-26.7/2.0+5.86/1000.*CLHEP::mm);
 	
 
-
+	//single particle isotropic emission
 	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
 	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
 	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
@@ -217,10 +227,10 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	//G4cout<<"++++++++++++  x0="<<x0/CLHEP::mm<<"  y0="<<y0/CLHEP::mm<<"  z0="<<z0/CLHEP::mm<<G4endl;
 	//position=G4ThreeVector(x0*CLHEP::mm,y0*CLHEP::mm,z0*CLHEP::mm);// 2D beam spot
 	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);// point source, usually for check, validation and test
-	momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
-	//momentumDirection = G4ThreeVector(0,0,+1);//(0,0,+1) unidirectional towards Z+ axis, usually for check, validation and test
+	//momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	momentumDirection = G4ThreeVector(0,0,-1);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
 	fParticleGun->SetParticleDefinition(particle);
-	fParticleGun->SetParticleEnergy(Erecoil);
+	fParticleGun->SetParticleEnergy(rand_energy());
 	fParticleGun->SetParticlePosition(position);
 	fParticleGun->SetParticleMomentumDirection(momentumDirection);
 	fParticleGun->SetParticleCharge(ioncharge);
@@ -236,6 +246,97 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 
 
 	// *** for the second particle emitted in the same event ***
-	//fParticleGun->GeneratePrimaryVertex(anEvent);// if you do not need the second particle in the same event, annotate this statement
+	particle = G4ParticleTable::GetParticleTable()->FindParticle("proton");
+	//Erecoil = 2000*CLHEP::keV;
+	Erecoil =G4RandGauss::shoot(2.2,0.5)*CLHEP::MeV;
+
+	//single particle isotropic emission
+	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
+	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
+	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
+	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
+	dirx=sintheta_n1*cos(phi_n1);//isotropy
+	diry=sintheta_n1*sin(phi_n1);//isotropy
+	dirz=costheta_n1;//isotropy
+
+	//position=G4ThreeVector(x0*CLHEP::mm,y0*CLHEP::mm,z0*CLHEP::mm);// 2D beam spot
+	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);// point source, usually for check, validation and test
+	momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	//momentumDirection = G4ThreeVector(0,0,-1);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
+	fParticleGun->SetParticleDefinition(particle);
+	fParticleGun->SetParticleEnergy(Erecoil);
+	fParticleGun->SetParticlePosition(position);
+	fParticleGun->SetParticleMomentumDirection(momentumDirection);
+	fParticleGun->SetParticleCharge(ioncharge);
+	//fParticleGun->GeneratePrimaryVertex(anEvent); // if you do not need the second particle in the same event, comment this statement out
+
+
+
+
+
+
+
+
+
+
+
+	// *** for the third particle emitted in the same event ***
+	particle = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+	Erecoil =3000*CLHEP::keV;
+
+	//single particle isotropic emission
+	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
+	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
+	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
+	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
+	dirx=sintheta_n1*cos(phi_n1);//isotropy
+	diry=sintheta_n1*sin(phi_n1);//isotropy
+	dirz=costheta_n1;//isotropy
+
+	//position=G4ThreeVector(x0*CLHEP::mm,y0*CLHEP::mm,z0*CLHEP::mm);// 2D beam spot
+	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);// point source, usually for check, validation and test
+	momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	//momentumDirection = G4ThreeVector(0,0,-1);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
+	fParticleGun->SetParticleDefinition(particle);
+	fParticleGun->SetParticleEnergy(Erecoil);
+	fParticleGun->SetParticlePosition(position);
+	fParticleGun->SetParticleMomentumDirection(momentumDirection);
+	fParticleGun->SetParticleCharge(ioncharge);
+	//fParticleGun->GeneratePrimaryVertex(anEvent); // if you do not need the third particle in the same event, comment this statement out
+
+
+
+
+
+	
+
+
+
+
+	// *** for the fourth particle emitted in the same event ***
+	particle = G4ParticleTable::GetParticleTable()->FindParticle("e+");
+	//Erecoil =4000*CLHEP::keV;
+	Erecoil = G4RandGauss::shoot(2,1)*CLHEP::MeV;
+
+	//single particle isotropic emission
+	costheta_n1=CLHEP::RandFlat::shoot(-1,1);//isotropy
+	phi_n1=CLHEP::RandFlat::shoot(0.,2.*3.14159);//isotropy
+	//G4cout<<"------------ phi="<<phi<<' '<<"costheta="<<costheta<<G4endl;
+	sintheta_n1=sqrt(1.0-costheta_n1*costheta_n1);//isotropy
+	dirx=sintheta_n1*cos(phi_n1);//isotropy
+	diry=sintheta_n1*sin(phi_n1);//isotropy
+	dirz=costheta_n1;//isotropy
+
+	//position=G4ThreeVector(x0*CLHEP::mm,y0*CLHEP::mm,z0*CLHEP::mm);// 2D beam spot
+	position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0.*CLHEP::mm);// point source, usually for check, validation and test
+	momentumDirection = G4ThreeVector(dirx,diry,dirz);//isotropy
+	//momentumDirection = G4ThreeVector(0,0,-1);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
+	fParticleGun->SetParticleDefinition(particle);
+	//fParticleGun->SetParticleEnergy(Erecoil);
+	fParticleGun->SetParticlePosition(position);
+	fParticleGun->SetParticleMomentumDirection(momentumDirection);
+	fParticleGun->SetParticleCharge(ioncharge);
+	//fParticleGun->GeneratePrimaryVertex(anEvent); // if you do not need the fourth particle in the same event, comment this statement out
+
 }
 

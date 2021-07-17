@@ -11,7 +11,7 @@
 #include "G4VSensitiveDetector.hh"
 #include "G4ios.hh"
 
-ExG4DetectorConstruction::ExG4DetectorConstruction():G4VUserDetectorConstruction(),physiDSSD1(0),physiDSSD2(0),physiDSSD3(0),physiQSD1(0),physiQSD2(0),silicon(0),germanium(0),gold(0),iron(0),carbon(0),csi(0),vacuum(0)
+ExG4DetectorConstruction::ExG4DetectorConstruction():G4VUserDetectorConstruction(),physiDSSD1(0),physiDSSD2(0),physiDSSD3(0),physiQSD1(0),physiQSD2(0),physiChamber(0),silicon(0),germanium(0),gold(0),iron(0),carbon(0),csi(0),vacuum(0)
 {}
 
 ExG4DetectorConstruction::~ExG4DetectorConstruction()
@@ -123,30 +123,46 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
 
 	//DSSD3
 	G4VSolid* solidDSSD3
-		= new G4Box("solidDSSD3",30./2.*mm,30./2.*mm,10./2.*mm); //X-ray detector
+		= new G4Tubs("solidDSSD3",0.0*mm, 8.0*mm, 10.0/2.*mm,	0.*deg, 	360.*deg); //X-ray detector
+// 	G4VSolid* solidDSSD3
+// 		= new G4Box("solidDSSD3",10./2.*mm,10./2.*mm,5/2.*mm); //X-ray detector
 	logicDSSD3
 		= new G4LogicalVolume(solidDSSD3,germanium,"logicDSSD3");
 	physiDSSD3
-		= new G4PVPlacement(0,G4ThreeVector(0,0,-20.*mm),logicDSSD3,"physiDSSD3",logicWorld,false,0,checkOverlaps);
+		= new G4PVPlacement(0,G4ThreeVector(0,0,-10.*mm),logicDSSD3,"physiDSSD3",logicWorld,false,0,checkOverlaps);
 	//0,0,155 is for real TIGRESS
 
 	//QSD1
 	G4VSolid* solidQSD1
-		= new G4Box("solidQSD1",80./2.*mm,80./2.*mm,100./2.*mm); //HPGe
+		= new G4Tubs("solidQSD1",0.0*mm, 50.0*mm, 100.0/2.*mm,	0.*deg, 	360.*deg); //HPGe
+// 	G4VSolid* solidQSD1
+// 		= new G4Box("solidQSD1",80./2.*mm,80./2.*mm,100./2.*mm); //HPGe
 	logicQSD1
 		= new G4LogicalVolume(solidQSD1,germanium,"logicQSD1");
 	physiQSD1 //(78.26+148.9/2)=152.71
-		= new G4PVPlacement(0,G4ThreeVector(0,0,100*mm),logicQSD1,"physiQSD1",logicWorld,false,0,checkOverlaps);
+		= new G4PVPlacement(0,G4ThreeVector(0,0,92*mm),logicQSD1,"physiQSD1",logicWorld,false,0,checkOverlaps);
 
 	//QSD2
 	G4VSolid* solidQSD2
-		= new G4Tubs("solidQSD2",0.0*mm, 8.0*mm, 0.010/2.*mm,	0.*deg, 	360.*deg); //target
+		= new G4Tubs("solidQSD2",0.0*mm, 8.0*mm, 0.0000010/2.*mm,	0.*deg, 	360.*deg); //target
 // 	G4VSolid* solidQSD2
 // 		= new G4Box("solidQSD2",50./2.*mm,50./2.*mm,300./2.*um);
 	logicQSD2
 		= new G4LogicalVolume(solidQSD2,mylar,"logicQSD2");
 	physiQSD2
 		= new G4PVPlacement(0,G4ThreeVector(0,0,0*mm),logicQSD2,"physiQSD2",logicWorld,false,0,checkOverlaps);
+
+	//Chamber
+	G4RotationMatrix* Rot = new G4RotationMatrix; // Rotates X and Z axes only
+	Rot -> rotateX(M_PI/2.*rad); // Rotates 90 degrees
+	G4VSolid* solidChamber
+		= new G4Tubs("solidChamber",33.0*mm, 34.0*mm, 100.0/2.*mm,	0.*deg, 	360.*deg); //Chamber
+	// 	G4VSolid* solidQSD2
+	// 		= new G4Box("solidQSD2",50./2.*mm,50./2.*mm,300./2.*um);
+	logicChamber
+		= new G4LogicalVolume(solidChamber,stainless_steel,"logicChamber");
+	physiChamber
+		= new G4PVPlacement(Rot,G4ThreeVector(0,0,0*mm),logicChamber,"physiQSD2",logicWorld,false,0,checkOverlaps);
 
 
 	// visualization attributes ------------------------------------------------

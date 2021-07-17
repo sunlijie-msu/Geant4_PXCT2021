@@ -76,20 +76,7 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 //   }
   ofstream outresultfile("out.txt",ios::app);//定义输出文件流对象outbeamfile，以追加方式打开磁盘文件. by event
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  G4double ih=-1,jh=-1;  //which strip is hitted 
-  G4double eDep;
-  G4double tof=-999;
-  G4int totalEmHit = 0;
-  G4double totalEmE = 0.;
-  G4double px[100],py[100],pz[100],dx[100],length=0;//length is the sum of all the dx
-  G4double t[100],dt[100],velocity=0;//velocity is dx/dt
-  G4int ring1_hit, ring2_hit, ring3_hit;
-  memset(px,0,sizeof(px));
-  memset(py,0,sizeof(py));
-  memset(pz,0,sizeof(pz));
-  memset(dx,0,sizeof(dx));//distance between two step points
-  memset(dt,0,sizeof(dt));//time difference between two step points
-  memset(t,0,sizeof(t));//time stamp of each step point
+
 
   if(dHC1)//For DSSD1
   {
@@ -144,7 +131,8 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  //G4double Etemp=totalEmE;
 		  //totalEmE=G4RandGauss::shoot(Etemp,dssd1Reso*Etemp);//G4RandGauss::shoot(μ,σ)
 	  //}
-	  analysisManager->FillH1(3,totalEmE/CLHEP::keV);//h1 ID=3 filled by event
+	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+	  analysisManager->FillH1(3,totalEmE/CLHEP::keV);//h1 ID=3 filled by event. Fill histogram using the values in units of keV. Don't change. 
  	  analysisManager->FillNtupleDColumn(1,totalEmE/CLHEP::keV);//nt ID=1 filled by event
  	  analysisManager->FillNtupleDColumn(5,t[0]);//nt ID=5 filled by event
   }
@@ -222,7 +210,8 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  //G4double Etemp=totalEmE;
 		  //totalEmE=G4RandGauss::shoot(Etemp,dssd2Reso*Etemp);//G4RandGauss::shoot(μ,σ)
 	  //}
-	  analysisManager->FillH1(4,totalEmE/CLHEP::keV);//h1 ID=4
+	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+	  analysisManager->FillH1(4,totalEmE/CLHEP::keV);//h1 ID=4. Fill histogram using the values in units of keV. Don't change. 
 	  analysisManager->FillNtupleDColumn(7,totalEmE/CLHEP::keV);//nt ID=7
 	  if(ring1_hit==1) analysisManager->FillNtupleDColumn(24,totalEmE/CLHEP::keV);//nt ID=24  //segmented rings
 	  if(ring2_hit==1) analysisManager->FillNtupleDColumn(27,totalEmE/CLHEP::keV);//nt ID=27  //segmented rings
@@ -276,12 +265,14 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 	  }
 	  //Outside the loop, the nt are filled by event, so the number of "nt>0" is exactly the event number!
 	  analysisManager->FillNtupleIColumn(12,dHC3->entries());//nt ID=12
-	  //if(totalEmE>0)
-	  //{
-		  //G4double Etemp=totalEmE;
-		  //totalEmE=G4RandGauss::shoot(Etemp,dssd3Reso*Etemp);//G4RandGauss::shoot(μ,σ)
-	  //}
-	  analysisManager->FillH1(5,totalEmE/CLHEP::keV);//h1 ID=5
+	  if(totalEmE>0.001*CLHEP::MeV)
+	  {
+		  G4double Etemp=totalEmE;
+		  //totalEmE=G4RandGauss::shoot(Etemp,0.01/2.355*Etemp);//G4RandGauss::shoot(μ,σ)
+		  totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355/1000000.0);//G4RandGauss::shoot(μ,σ)
+	  }
+	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+	  analysisManager->FillH1(5,totalEmE/CLHEP::keV);//h1 ID=5. Fill histogram using the values in units of keV. Don't change. 
  	  analysisManager->FillNtupleDColumn(13,totalEmE/CLHEP::keV);//nt ID=13
  	  analysisManager->FillNtupleDColumn(17,t[0]);//nt ID=17
   }
@@ -322,7 +313,8 @@ void ExG4EventAction::EndOfEventAction(const G4Event* event)
 		  //G4double Etemp=totalEmE;
 		  //totalEmE=G4RandGauss::shoot(Etemp,dssd3Reso*Etemp);//G4RandGauss::shoot(μ,σ)
 	  //}
-	  //analysisManager->FillH1(5,totalEmE);//h1 ID=5
+	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+	  //analysisManager->FillH1(6,totalEmE);//h1 ID=6. Fill histogram using the values in units of keV. Don't change. 
 	  analysisManager->FillNtupleDColumn(19,totalEmE/CLHEP::keV);//nt ID=19
 	  analysisManager->FillNtupleDColumn(23,tof);//nt ID=23
   }

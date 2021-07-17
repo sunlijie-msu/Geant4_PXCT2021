@@ -13,7 +13,7 @@
 /vis/geometry/set/visibility logicWorld 0 false
 /vis/scene/notifyHandlers
 /vis/viewer/set/viewpointThetaPhi 95. 170.
-/vis/viewer/set/lightsVector 0 1 -2
+/vis/viewer/set/lightsVector 0 1 -4
 /vis/viewer/zoom 1.0
 /vis/viewer/set/style surface
 /vis/scene/add/trajectories smooth
@@ -74,11 +74,18 @@
 /gui/addButton viewer "Flush viewer (= refresh + update)" "/vis/viewer/flush"
 /gui/addButton viewer "Update scene" "/vis/scene/notifyHandlers"
 /gui/addIcon "Run beam on" user_icon "/run/beamOn 1" run.png
-/run/beamOn 100
+/run/beamOn 3
 /vis/scene/notifyHandlers scene-0
-/vis/viewer/set/defaultColour 1
-/vis/viewer/refresh
-/vis/viewer/set/defaultColour 1  2  3  4
+/vis/viewer/set/picking false
 /vis/viewer/refresh
 /vis/viewer/set/picking false
 /vis/viewer/refresh
+/run/beamOn 10
+/run/beamOn 40
+/vis/viewer/set/picking false
+/vis/viewer/refresh
+/vis/viewer/set/picking false
+/vis/viewer/refresh
+/vis/viewer/set/picking false
+/vis/viewer/refresh
+/run/beamOn 40

@@ -1,6 +1,6 @@
 PXCT simulation
 
-Location on fishtank:
+Fishtank:
 cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
 
 1) cmake -DGeant4_DIR=/mnt/simulations/proton_detector/Geant4/geant4.10.2-install/lib/Geant4-10.2.2 /mnt/simulations/pxct/lijie/PXCT_Sim
@@ -10,7 +10,6 @@ cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
 3) ./tele vis
 
 
-Location on my laptop:
 VMware Ubuntu can also use these files.
 
 cdp

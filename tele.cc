@@ -47,7 +47,7 @@ int main(int argc,char** argv)
 	{
 		for(int runid=0;runid<1;runid++)
 		{
-			runManager->BeamOn(1000000);//
+			runManager->BeamOn(10);//
 		}
 	}
 	else

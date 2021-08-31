@@ -44,7 +44,8 @@
 #/vis/viewer/set/style wireframe
 #/vis/viewer/set/auxiliaryEdge true
 #/vis/viewer/set/lineSegmentsPerCircle 100
-#
+/vis/viewer/set/edge true
+
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 1 m
 #
@@ -90,4 +91,4 @@
 #/vis/viewer/flush
 /control/execute gui.mac
 
-/run/beamOn 100
+#/run/beamOn 10
